@@ -181,6 +181,7 @@ var createScene = async function () {
     //camera.attachControl(canvas, true);
     var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
     light.intensity = 0.7;
+    scene.debugLayer.show(); //подключение инспектора 
 
     await BABYLON.SceneLoader.AppendAsync(
         "https://raw.githubusercontent.com/BabylonJS/Assets/master/meshes/",
@@ -193,6 +194,10 @@ var createScene = async function () {
     );
 
     // Physics
+    var ball2 = scene.getMeshByName("ballMesh_low");
+    const BallMaterial = new BABYLON.StandardMaterial('ballMaterial', scene); //-------------------------------------------------------------------
+    BallMaterial.diffuseTexture = new BABYLON.Texture('./textures/a27.jpg');
+    ball2.material = BallMaterial;
 
     var ball = scene.getMeshByName("ballMesh_low").parent;
     ball.scaling = new BABYLON.Vector3(20,20,20);
@@ -359,7 +364,12 @@ var createScene = async function () {
         }
         time += 0.4;
     });
-
+// ----------------------------------------- add vr----------------------------------------------------------
+    const env = scene.createDefaultEnvironment();
+    const xr = await scene.createDefaultXRExperienceAsync({
+        floorMeshes: [env.ground]
+    })
+// -----------------------------------------------------------------------------------------------------------
     return scene;
 };
                 window.initFunction = async function() {
